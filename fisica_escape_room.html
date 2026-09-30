@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Escape Room: Cinematica</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #1e1e2e; color: #cdd6f4; text-align: center; padding: 30px; }
+    .card { background: #313244; max-width: 500px; margin: auto; padding: 25px; border-radius: 12px; }
+    button { display: block; width: 100%; margin: 8px 0; padding: 12px; background: #89b4fa; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    button:hover { background: #b4befe; }
+    .hint { color: #f9e2af; font-style: italic; margin-top: 15px; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h2 id="title">Stanza 1</h2>
+  <p id="question"></p>
+  <div id="options"></div>
+  <p id="feedback" class="hint"></p>
+</div>
+<script>
+const rooms = [
+  { q: "Stanza 1: Un'auto viaggia a 72 km/h per 10 s. Quanti metri percorre?", opts: ["100 m", "200 m", "720 m"], a: 1, hint: "Converti prima in m/s (72 / 3.6 = 20 m/s)." },
+  { q: "Stanza 2: Nel Moto Rettilineo Uniforme, com'è l'accelerazione?", opts: ["Costante e maggiore di zero", "Nulla", "Variabile"], a: 1, hint: "La velocità non cambia nel tempo!" },
+  { q: "Stanza 3: Un sasso cade da fermo per 3 s (g = 9.8 m/s²). Qual è la velocità?", opts: ["29.4 m/s", "19.6 m/s", "9.8 m/s"], a: 0, hint: "Usa v = g * t." },
+  { q: "Stanza 4: Qual è la traiettoria di un proiettile lanciato orizzontalmente?", opts: ["Retta", "Parabola", "Circonferenza"], a: 1, hint: "È la combinazione di un MRU orizzontale e caduta libera." },
+  { q: "Stanza 5: Se il periodo T è 0.5 s, qual è la frequenza f?", opts: ["0.5 Hz", "1 Hz", "2 Hz"], a: 2, hint: "La frequenza è l'inverso del periodo (f = 1 / T)." }
+];
+let current = 0;
+function load() {
+  if(current >= rooms.length) {
+    document.querySelector('.card').innerHTML = "<h2>🎉 Fuga Riuscita!</h2><p>Hai superato tutte le stanze!</p>";
+    return;
+  }
+  document.getElementById('title').innerText = `Stanza ${current + 1} di 5`;
+  document.getElementById('question').innerText = rooms[current].q;
+  document.getElementById('feedback').innerText = "";
+  const div = document.getElementById('options');
+  div.innerHTML = "";
+  rooms[current].opts.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.innerText = opt;
+    btn.onclick = () => {
+      if(idx === rooms[current].a) { current++; load(); }
+      else { document.getElementById('feedback').innerText = "❌ Errato! " + rooms[current].hint; }
+    };
+    div.appendChild(btn);
+  });
+}
+load();
+</script>
+</body>
+</html>
